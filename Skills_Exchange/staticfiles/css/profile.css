@@ -1,0 +1,491 @@
+/* Profile-specific responsive styles */
+.profile-creator {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.progress-sidebar {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.form-container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 650px;
+    /* Fixed width for large screens */
+    margin: 0 auto;
+    /* Center the form */
+}
+
+.progress-steps {
+    list-style: none;
+    margin-top: 20px;
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.progress-step.active {
+    background: rgba(67, 97, 238, 0.1);
+    border-left: 4px solid var(--primary);
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--gray-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.progress-step.active .step-number {
+    background: var(--primary);
+    color: white;
+}
+
+.step-completed .step-number {
+    background: var(--success);
+    color: white;
+}
+
+.step-text h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.step-text p {
+    font-size: 13px;
+    color: var(--gray-medium);
+}
+
+.form-section {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.form-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.section-header h2 {
+    font-size: 1.8rem;
+    color: var(--secondary);
+    margin-bottom: 10px;
+}
+
+.section-header p {
+    color: var(--gray-medium);
+}
+
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.skill-tag {
+    background: rgba(67, 97, 238, 0.1);
+    color: var(--primary);
+    padding: 8px 15px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.skill-tag i {
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+.add-skill {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.add-skill input {
+    flex: 1;
+}
+
+.file-upload-area {
+    border: 2px dashed var(--gray-light);
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.file-upload-area:hover {
+    border-color: var(--primary);
+    background: rgba(67, 97, 238, 0.05);
+}
+
+.file-upload-area i {
+    font-size: 40px;
+    color: var(--primary);
+    margin-bottom: 15px;
+}
+
+.file-upload-area p {
+    color: var(--gray-medium);
+    margin-bottom: 10px;
+}
+
+.file-upload-area span {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.uploaded-files {
+    margin-top: 20px;
+}
+
+.uploaded-file {
+    display: flex;
+    align-items: center;
+    background: var(--light);
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.uploaded-file i {
+    color: var(--primary);
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-info h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.file-info p {
+    font-size: 12px;
+    color: var(--gray-medium);
+    margin: 0;
+}
+
+.file-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.file-action {
+    background: none;
+    border: none;
+    color: var(--gray-medium);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.file-action:hover {
+    color: var(--primary);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+.skill-visualization {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.visualization-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.visualization-header h2 {
+    font-size: 1.8rem;
+    color: var(--secondary);
+    margin-bottom: 10px;
+}
+
+.visualization-header p {
+    color: var(--gray-medium);
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.skill-card {
+    background: var(--light);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.skill-card h3 {
+    margin-bottom: 10px;
+    color: var(--secondary);
+}
+
+.skill-level {
+    height: 8px;
+    background: var(--gray-light);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.skill-progress {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+.skill-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--gray-medium);
+}
+
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--magic);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkle 0.8s ease-out forwards;
+}
+
+@keyframes sparkle {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.magic-wand {
+    position: absolute;
+    right: 10%;
+    top: 0;
+    font-size: 24px;
+    color: var(--magic);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Mobile menu toggle for profile page */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--dark);
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+    .profile-creator {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        max-width: 800px;
+    }
+
+    .progress-sidebar {
+        position: static;
+        max-width: 650px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .form-container {
+        max-width: 650px;
+        /* Same width as large screens */
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-creator {
+        padding: 0 15px;
+        max-width: 100%;
+    }
+
+    .form-container {
+        padding: 25px;
+        max-width: 100%;
+        /* Full width on mobile */
+        width: 100%;
+    }
+
+    .progress-sidebar {
+        padding: 25px;
+        max-width: 100%;
+    }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .add-skill {
+        flex-direction: column;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    .uploaded-file {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .file-actions {
+        align-self: flex-end;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    .progress-step {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .step-number {
+        margin-right: 0;
+    }
+
+    .file-upload-area {
+        padding: 30px 15px;
+    }
+
+    .file-upload-area i {
+        font-size: 30px;
+    }
+
+    .skill-tag {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .section-header h2 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+    .form-container {
+        padding: 15px;
+    }
+
+    .progress-sidebar {
+        padding: 20px;
+    }
+
+    .file-upload-area {
+        padding: 20px 10px;
+    }
+
+    .skill-tag {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+}

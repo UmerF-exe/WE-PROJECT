@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Propose Exchange | SkillSwap{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<style>
+    .exchange-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 30px;
+        margin-bottom: 20px;
+    }
+    
+    .skill-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        display: inline-block;
+        margin: 10px 0;
+        font-weight: 600;
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .user-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .exchange-arrow {
+        text-align: center;
+        font-size: 30px;
+        color: #667eea;
+        margin: 20px 0;
+    }
+    
+    .form-select, .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-select:focus, .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .btn-propose {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 12px 40px;
+        border-radius: 25px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-propose:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4">Propose Skill Exchange</h2>
+            
+            <div class="exchange-card">
+                <h4 class="mb-3">They are offering:</h4>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        {% if other_user_skill.user.userprofile.full_name %}
+                            {{ other_user_skill.user.userprofile.full_name|slice:":1"|upper }}
+                        {% else %}
+                            {{ other_user_skill.user.username|slice:":1"|upper }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h5 class="mb-0">
+                            {% if other_user_skill.user.userprofile.full_name %}
+                                {{ other_user_skill.user.userprofile.full_name }}
+                            {% else %}
+                                {{ other_user_skill.user.username }}
+                            {% endif %}
+                        </h5>
+                        <p class="text-muted mb-0">
+                            {% if other_user_skill.user.userprofile.location %}
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ other_user_skill.user.userprofile.location }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="skill-badge">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    {{ other_user_skill.skill.name }}
+                </div>
+                
+                <p class="mt-3">
+                    <span class="badge bg-secondary">{{ other_user_skill.get_proficiency_display }}</span>
+                    <span class="ms-2 text-muted">
+                        <i class="fas fa-briefcase me-1"></i>
+                        {{ other_user_skill.experience_years }} year{{ other_user_skill.experience_years|pluralize }} experience
+                    </span>
+                </p>
+            </div>
+            
+            <div class="exchange-arrow">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            
+            <div class="exchange-card">
+                <h4 class="mb-3">Select what you want to offer:</h4>
+                
+                {% if my_offered_skills %}
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="my_skill" class="form-label fw-bold">Your Skill to Offer:</label>
+                        <select class="form-select" id="my_skill" name="my_skill" required>
+                            <option value="">-- Select a skill --</option>
+                            {% for skill in my_offered_skills %}
+                            <option value="{{ skill.id }}">
+                                {{ skill.skill.name }} ({{ skill.get_proficiency_display }}, {{ skill.experience_years }} years)
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="notes" class="form-label fw-bold">Message (Optional):</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="4" 
+                                  placeholder="Introduce yourself and explain what you'd like to learn..."></textarea>
+                    </div>
+                    
+                    <div class="text-center">
+                        <a href="{% url 'marketplace' %}" class="btn btn-outline-secondary px-4 py-2 me-3">Cancel</a>
+                        <button type="submit" class="btn btn-propose">
+                            <i class="fas fa-paper-plane me-2"></i>Send Proposal
+                        </button>
+                    </div>
+                </form>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    You need to add skills you can offer before proposing an exchange.
+                    <a href="{% url 'manage_skills' %}" class="alert-link">Add skills now</a>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{% url 'marketplace' %}" class="btn btn-outline-secondary">Back to Marketplace</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

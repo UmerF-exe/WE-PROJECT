@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Manage Skills | SkillSwap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center mb-4">Manage Your Skills</h2>
+
+  <div class="row justify-content-center">
+    <div class="col-md-9 bg-white p-4 shadow-sm rounded">
+      <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+
+        <table class="table align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Skill</th>
+              <th>Role</th>
+              <th>Proficiency</th>
+              <th>Experience (years)</th>
+              <th class="text-center">Remove</th>
+            </tr>
+          </thead>
+          <tbody id="skills-body">
+            {% for form in formset %}
+            <tr>
+              {{ form.id }}  <!-- Ensure hidden id field is rendered -->
+              <td>{{ form.skill }}</td>
+              <td>{{ form.role }}</td>
+              <td>{{ form.proficiency }}</td>
+              <td>{{ form.experience_years }}</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-link text-danger delete-btn" title="Delete Skill">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+                <div style="display:none;">{{ form.DELETE }}</div>
+              </td>
+            </tr>
+            {% endfor %}
+
+            <!-- Hidden template form -->
+            <tr id="empty-form-row" class="d-none">
+              {{ formset.empty_form.id }}
+              <td>{{ formset.empty_form.skill }}</td>
+              <td>{{ formset.empty_form.role }}</td>
+              <td>{{ formset.empty_form.proficiency }}</td>
+              <td>{{ formset.empty_form.experience_years }}</td>
+              <td class="text-center">
+                <button type="button" class="btn btn-link text-danger delete-btn" title="Delete Skill">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+                <div style="display:none;">{{ formset.empty_form.DELETE }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <button type="button" class="btn btn-outline-primary" id="add-skill">+ Add Skill</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const skillsBody = document.getElementById("skills-body");
+  const totalForms = document.getElementById("id_form-TOTAL_FORMS");
+  const emptyForm = document.getElementById("empty-form-row");
+
+  document.getElementById("add-skill").addEventListener("click", function () {
+    const formCount = parseInt(totalForms.value);
+    const newForm = emptyForm.cloneNode(true);
+    newForm.classList.remove("d-none");
+    newForm.id = "";
+    newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, formCount);
+    skillsBody.appendChild(newForm);
+    totalForms.value = formCount + 1;
+  });
+
+  skillsBody.addEventListener("click", function (event) {
+    if (event.target.closest(".delete-btn")) {
+      const row = event.target.closest("tr");
+      const deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
+      if (deleteCheckbox) {
+        deleteCheckbox.checked = true;
+        row.style.display = "none";
+      }
+    }
+  });
+</script>
+{% endblock %}

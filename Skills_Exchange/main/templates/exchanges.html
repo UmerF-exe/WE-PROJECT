@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Exchanges | SkillSwap{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1><i class="fas fa-exchange-alt me-2 text-primary"></i> My Exchanges</h1>
+            <p class="text-muted">Manage all your skill exchange activities</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="{% url 'marketplace' %}" class="btn btn-primary">
+                <i class="fas fa-search me-2"></i>Find New Exchanges
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="stats-summary d-flex flex-wrap gap-3 p-3 bg-light rounded">
+                <div class="stat-item">
+                    <span class="badge bg-warning text-dark fs-5">{{ pending_exchanges|length }}</span>
+                    <span class="ms-2">Pending</span>
+                </div>
+                <div class="stat-item">
+                    <span class="badge bg-success fs-5">{{ active_exchanges|length }}</span>
+                    <span class="ms-2">Active</span>
+                </div>
+                <div class="stat-item">
+                    <span class="badge bg-info text-dark fs-5">{{ completed_exchanges|length }}</span>
+                    <span class="ms-2">Completed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="badge bg-secondary fs-5">{{ total_count }}</span>
+                    <span class="ms-2">Total</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if pending_exchanges %}
+    <div class="exchange-section mb-5">
+        <div class="section-header d-flex align-items-center mb-3">
+            <i class="fas fa-clock text-warning me-2 fs-4"></i>
+            <h2 class="mb-0">Pending Exchanges ({{ pending_exchanges|length }})</h2>
+        </div>
+        {% for exchange in pending_exchanges %}
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-start mb-2">
+                            <div class="user-avatar-small bg-warning text-white rounded-circle me-3 d-flex justify-content-center align-items-center" style="width:50px;height:50px;">
+                                {{ exchange.other_user_name|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <h5 class="mb-1">
+                                    {% if exchange.is_initiator %}
+                                        Waiting for <strong>{{ exchange.other_user_name }}</strong>
+                                    {% else %}
+                                        <strong>{{ exchange.other_user_name }}</strong> wants to exchange
+                                    {% endif %}
+                                </h5>
+                                <div class="exchange-details mt-2">
+                                    <p class="mb-1">
+                                        <i class="fas fa-arrow-right text-success me-2"></i>
+                                        <strong>You offer:</strong>
+                                        <span class="badge bg-success ms-1">{{ exchange.my_skill.name }}</span>
+                                    </p>
+                                    <p class="mb-1">
+                                        <i class="fas fa-arrow-left text-primary me-2"></i>
+                                        <strong>They offer:</strong>
+                                        <span class="badge bg-primary ms-1">{{ exchange.their_skill.name }}</span>
+                                    </p>
+                                    {% if exchange.notes %}
+                                    <p class="mb-1 mt-2">
+                                        <i class="fas fa-comment-dots me-2"></i>
+                                        <strong>Message:</strong> <em>"{{ exchange.notes }}"</em>
+                                    </p>
+                                    {% endif %}
+                                </div>
+                                <p class="text-muted small mb-0 mt-2">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Sent on {{ exchange.start_date|date:"M d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        {% if not exchange.is_initiator %}
+                        <a href="{% url 'accept_exchange' exchange.id %}" 
+                           class="btn btn-success btn-sm mb-2 w-100"
+                           onclick="return confirm('Accept this exchange proposal?')">
+                            <i class="fas fa-check me-1"></i>Accept
+                        </a>
+                        <a href="{% url 'reject_exchange' exchange.id %}" 
+                           class="btn btn-outline-danger btn-sm w-100"
+                           onclick="return confirm('Decline this exchange proposal?')">
+                            <i class="fas fa-times me-1"></i>Decline
+                        </a>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">Awaiting Response</span>
+                        {% endif %}
+                        <a href="{% url 'profile' exchange.other_user.id %}" 
+                           class="btn btn-outline-secondary btn-sm mt-2 w-100">
+                            <i class="fas fa-user me-1"></i>View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if active_exchanges %}
+    <div class="exchange-section mb-5">
+        <div class="section-header d-flex align-items-center mb-3">
+            <i class="fas fa-handshake text-success me-2 fs-4"></i>
+            <h2 class="mb-0">Active Exchanges ({{ active_exchanges|length }})</h2>
+        </div>
+        {% for exchange in active_exchanges %}
+        <div class="card mb-3 shadow-sm border-success">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-start mb-2">
+                            <div class="user-avatar-small bg-success text-white rounded-circle me-3 d-flex justify-content-center align-items-center" style="width:50px;height:50px;">
+                                {{ exchange.other_user_name|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Exchange with <strong>{{ exchange.other_user_name }}</strong></h5>
+                                <div class="exchange-details mt-2">
+                                    <p class="mb-1">
+                                        <i class="fas fa-graduation-cap text-success me-2"></i>
+                                        <strong>You're offering:</strong>
+                                        <span class="badge bg-success ms-1">{{ exchange.my_skill.name }}</span>
+                                    </p>
+                                    <p class="mb-1">
+                                        <i class="fas fa-book-reader text-primary me-2"></i>
+                                        <strong>You're seeking:</strong>
+                                        <span class="badge bg-primary ms-1">{{ exchange.their_skill.name }}</span>
+                                    </p>
+                                    <div class="mt-2 p-2 bg-light rounded">
+                                        <p class="mb-1 small">
+                                            <strong>Your status:</strong>
+                                            {% if exchange.my_completed %}
+                                                <span class="badge bg-success">✓ Completed</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">○ In Progress</span>
+                                            {% endif %}
+                                        </p>
+                                        <p class="mb-1 small">
+                                            <strong>{{ exchange.other_user_name }}'s status:</strong>
+                                            {% if exchange.their_completed %}
+                                                <span class="badge bg-success">✓ Completed</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">○ In Progress</span>
+                                            {% endif %}
+                                        </p>
+                                        {% if exchange.completion_status == "Awaiting Admin Approval" %}
+                                        <p class="mb-0 small text-info">
+                                            <i class="fas fa-hourglass-half me-1"></i>
+                                            <strong>Both parts complete - Awaiting admin approval</strong>
+                                        </p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <p class="text-muted small mb-0 mt-2">
+                                    <i class="fas fa-calendar-check me-1"></i>
+                                    Started {{ exchange.start_date|date:"M d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        {% if not exchange.my_completed and not exchange.admin_approved %}
+                        <form method="post" action="{% url 'mark_exchange_complete' exchange.id %}" class="mb-2" onsubmit="return confirm('Mark your part of this exchange as complete?')">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm w-100">
+                                <i class="fas fa-check-circle me-1"></i>Mark Complete
+                            </button>
+                        </form>
+                        {% elif exchange.my_completed and not exchange.admin_approved %}
+                        <button class="btn btn-outline-success btn-sm mb-2 w-100" disabled>
+                            <i class="fas fa-check me-1"></i>You Completed
+                        </button>
+                        {% endif %}
+                        <a href="{% url 'conversation' exchange.other_user.id %}" 
+                           class="btn btn-primary btn-sm mb-2 w-100">
+                            <i class="fas fa-envelope me-1"></i>Message
+                        </a>
+                        <a href="{% url 'profile' exchange.other_user.id %}" 
+                           class="btn btn-outline-secondary btn-sm w-100">
+                            <i class="fas fa-user me-1"></i>View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if completed_exchanges %}
+    <div class="exchange-section mb-5">
+        <div class="section-header d-flex align-items-center mb-3">
+            <i class="fas fa-check-circle text-info me-2 fs-4"></i>
+            <h2 class="mb-0">Completed Exchanges ({{ completed_exchanges|length }})</h2>
+        </div>
+        {% for exchange in completed_exchanges %}
+        <div class="card mb-3 shadow-sm bg-light">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-start mb-2">
+                            <div class="user-avatar-small bg-info text-white rounded-circle me-3 d-flex justify-content-center align-items-center" style="width:50px;height:50px;">
+                                {{ exchange.other_user_name|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <h5 class="mb-1">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Exchange with <strong>{{ exchange.other_user_name }}</strong>
+                                </h5>
+                                <div class="exchange-details mt-2">
+                                    <p class="mb-1">
+                                        <strong>Skills exchanged:</strong>
+                                        <span class="badge bg-secondary ms-1">{{ exchange.my_skill.name }}</span>
+                                        <i class="fas fa-exchange-alt mx-2"></i>
+                                        <span class="badge bg-secondary">{{ exchange.their_skill.name }}</span>
+                                    </p>
+                                </div>
+                                <p class="text-muted small mb-0 mt-2">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Completed {{ exchange.last_updated|date:"M d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="{% url 'profile' exchange.other_user.id %}" 
+                           class="btn btn-outline-secondary btn-sm w-100">
+                            <i class="fas fa-user me-1"></i>View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if other_exchanges %}
+    <div class="exchange-section mb-5">
+        <div class="section-header d-flex align-items-center mb-3">
+            <i class="fas fa-archive text-secondary me-2 fs-4"></i>
+            <h2 class="mb-0">Other Exchanges ({{ other_exchanges|length }})</h2>
+        </div>
+        {% for exchange in other_exchanges %}
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-start mb-2">
+                            <div class="user-avatar-small bg-secondary text-white rounded-circle me-3 d-flex justify-content-center align-items-center" style="width:50px;height:50px;">
+                                {{ exchange.other_user_name|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <h5 class="mb-1">Exchange with <strong>{{ exchange.other_user_name }}</strong></h5>
+                                <p class="mb-1">
+                                    <span class="badge bg-secondary">{{ exchange.status|title }}</span>
+                                </p>
+                                <p class="text-muted small mb-0 mt-2">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    {{ exchange.start_date|date:"M d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="{% url 'profile' exchange.other_user.id %}" 
+                           class="btn btn-outline-secondary btn-sm w-100">
+                            <i class="fas fa-user me-1"></i>View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if not pending_exchanges and not active_exchanges and not completed_exchanges and not other_exchanges %}
+    <div class="text-center py-5">
+        <i class="fas fa-exchange-alt fa-5x text-muted mb-4"></i>
+        <h3>No Exchanges Yet</h3>
+        <p class="text-muted mb-4">You haven't started any skill exchanges yet. Browse the marketplace to find skills you want to learn!</p>
+        <a href="{% url 'marketplace' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-search me-2"></i>Browse Marketplace
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .exchange-section .section-header h2 {
+        font-size: 1.5rem;
+    }
+    .card {
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-2px);
+    }
+    .stats-summary .stat-item {
+        display: flex;
+        align-items: center;
+    }
+</style>
+{% endblock content %}

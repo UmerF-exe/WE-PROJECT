@@ -1,0 +1,235 @@
+/* Additional marketplace-specific styles */
+.marketplace-hero {
+    padding: 120px 0 60px;
+    text-align: center;
+}
+
+.marketplace-hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--magic) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.search-bar {
+    max-width: 600px;
+    margin: 30px auto;
+    position: relative;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 50px;
+    border: 2px solid var(--gray-light);
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.search-bar input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
+}
+
+.search-bar button {
+    position: absolute;
+    right: 5px;
+    top: 6px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.marketplace-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.filters-sidebar {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.filter-section {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.filter-section:last-child {
+    border-bottom: none;
+}
+
+.filter-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: var(--secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-options {
+    list-style: none;
+}
+
+.filter-option {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.filter-option label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.skill-count {
+    margin-left: auto;
+    background: var(--gray-light);
+    color: var(--gray-medium);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 12px;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.skill-tag {
+    background: rgba(67, 97, 238, 0.1);
+    color: var(--primary);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.skill-tag:hover,
+.skill-tag.active {
+    background: var(--primary);
+    color: white;
+}
+
+.skills-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.skills-header h2 {
+    font-size: 24px;
+    color: var(--secondary);
+}
+
+.view-options {
+    display: flex;
+    gap: 10px;
+}
+
+.view-option {
+    background: white;
+    border: 1px solid var(--gray-light);
+    border-radius: 8px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.view-option.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.skill-card.featured::before {
+    content: 'FEATURED';
+    position: absolute;
+    top: 15px;
+    right: -30px;
+    background: var(--warning);
+    color: white;
+    padding: 5px 30px;
+    font-size: 12px;
+    font-weight: bold;
+    transform: rotate(45deg);
+    z-index: 2;
+}
+
+.skill-category {
+    display: inline-block;
+    background: rgba(67, 97, 238, 0.1);
+    color: var(--primary);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.skill-user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.user-info h4 {
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.user-info p {
+    font-size: 12px;
+    color: var(--gray-medium);
+    margin: 0;
+}
+
+.skill-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.skill-actions .btn {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+}
+
+@media (max-width: 1024px) {
+    .marketplace-content {
+        grid-template-columns: 1fr;
+    }
+
+    .filters-sidebar {
+        position: static;
+    }
+}

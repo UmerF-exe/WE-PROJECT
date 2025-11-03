@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Messages | SkillSwap{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<style>
+    .messages-container {
+        height: calc(100vh - 150px);
+        display: flex;
+        background: #f5f5f5;
+    }
+    
+    .conversations-sidebar {
+        width: 350px;
+        background: white;
+        border-right: 1px solid #e0e0e0;
+        overflow-y: auto;
+    }
+    
+    .conversation-item {
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    
+    .conversation-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .conversation-item.active {
+        background: #e3f2fd;
+    }
+    
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+    }
+    
+    .conversation-info {
+        flex: 1;
+        margin-left: 15px;
+        min-width: 0;
+    }
+    
+    .conversation-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .last-message {
+        color: #666;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .unread-badge {
+        background: #2563eb;
+        color: white;
+        border-radius: 12px;
+        padding: 2px 8px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .no-conversations {
+        text-align: center;
+        padding: 40px 20px;
+        color: #999;
+    }
+    
+    .empty-state {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: #999;
+    }
+    
+    .empty-state i {
+        font-size: 80px;
+        margin-bottom: 20px;
+        opacity: 0.3;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="messages-container">
+    <div class="conversations-sidebar">
+        <div class="p-3 border-bottom">
+            <h4 class="mb-0">Messages</h4>
+        </div>
+        
+        {% if conversations %}
+            {% for conv in conversations %}
+            <a href="{% url 'conversation' conv.user.id %}" class="conversation-item {% if selected_user and selected_user.id == conv.user.id %}active{% endif %}">
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar">
+                        {% if conv.user.userprofile.full_name %}
+                            {{ conv.user.userprofile.full_name|slice:":1"|upper }}
+                        {% else %}
+                            {{ conv.user.username|slice:":1"|upper }}
+                        {% endif %}
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-name">
+                            {% if conv.user.userprofile.full_name %}
+                                {{ conv.user.userprofile.full_name }}
+                            {% else %}
+                                {{ conv.user.username }}
+                            {% endif %}
+                        </div>
+                        <div class="last-message">
+                            {% if conv.last_message %}
+                                {{ conv.last_message.content|truncatewords:8 }}
+                            {% else %}
+                                No messages yet
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if conv.unread_count > 0 %}
+                    <div class="unread-badge">{{ conv.unread_count }}</div>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+            <div class="no-conversations">
+                <i class="fas fa-comments fa-3x mb-3" style="opacity: 0.3;"></i>
+                <p>No conversations yet</p>
+                <p class="small">Start exchanging skills to chat with others!</p>
+                <a href="{% url 'marketplace' %}" class="btn btn-primary mt-3">
+                    <i class="fas fa-search me-2"></i>Browse Marketplace
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    
+    {% if selected_user %}
+    <div class="chat-main" style="flex: 1; display: flex; flex-direction: column; background: white;">
+        <div class="chat-header">
+            <div class="d-flex align-items-center">
+                <a href="{% url 'messages' %}" class="btn btn-link text-dark me-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="user-avatar-small me-3" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                    {% if selected_user.userprofile.full_name %}
+                        {{ selected_user.userprofile.full_name|slice:":1"|upper }}
+                    {% else %}
+                        {{ selected_user.username|slice:":1"|upper }}
+                    {% endif %}
+                </div>
+                <div>
+                    <h5 class="mb-0">
+                        {% if selected_user.userprofile.full_name %}
+                            {{ selected_user.userprofile.full_name }}
+                        {% else %}
+                            {{ selected_user.username }}
+                        {% endif %}
+                    </h5>
+                    <small class="text-muted">
+                        <a href="{% url 'profile' selected_user.id %}" class="text-decoration-none">View Profile</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages" style="flex: 1; overflow-y: auto; padding: 20px; background: #f8f9fa;">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="message {% if message.sender == request.user %}sent{% else %}received{% endif %}" style="margin-bottom: 15px; display: flex; align-items: flex-end; {% if message.sender == request.user %}justify-content: flex-end;{% endif %}">
+                    <div>
+                        <div class="message-bubble" style="max-width: 60%; padding: 12px 16px; border-radius: 18px; word-wrap: break-word; {% if message.sender != request.user %}background: white; border: 1px solid #e0e0e0; border-bottom-left-radius: 4px;{% else %}background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-bottom-right-radius: 4px;{% endif %}">
+                            {{ message.content }}
+                        </div>
+                        <div class="message-time {% if message.sender == request.user %}text-end{% endif %}" style="font-size: 11px; color: #999; margin-top: 5px; padding: 0 5px;">
+                            {{ message.timestamp|date:"M d, g:i A" }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center text-muted mt-5">
+                    <i class="fas fa-comments fa-3x mb-3" style="opacity: 0.2;"></i>
+                    <p>No messages yet. Start the conversation!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="chat-input-area" style="padding: 20px; background: white; border-top: 1px solid #e0e0e0;">
+            <form method="post" class="chat-input-form" style="display: flex; gap: 10px;">
+                {% csrf_token %}
+                <input 
+                    type="text" 
+                    name="content" 
+                    class="chat-input" 
+                    placeholder="Type a message..." 
+                    required
+                    autocomplete="off"
+                    style="flex: 1; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 25px; font-size: 15px;"
+                >
+                <button type="submit" class="send-button" style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; cursor: pointer;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Auto-scroll to bottom of messages
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        // Focus on input
+        const chatInput = document.querySelector('.chat-input');
+        if (chatInput) {
+            chatInput.focus();
+        }
+    </script>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-comment-dots"></i>
+        <h5>Select a conversation</h5>
+        <p>Choose a conversation from the sidebar to start messaging</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
