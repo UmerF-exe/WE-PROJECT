@@ -57,7 +57,8 @@ cd Skills_Exchange
 ### **2️⃣ Create and Activate Virtual Environment**
 python -m venv venv
 venv\Scripts\activate     # On Windows
-# source venv/bin/activate  # On Linux/Mac
+
+source venv/bin/activate  # On Linux/Mac
 
 
 ### **3️⃣ Install Dependencies**
@@ -85,7 +86,10 @@ You are free to use, modify, and distribute it with attribution.
 
 ### **👨‍💻 Author**
 Umer Farooque
+
 Department of Computer Systems Engineering
+
 Mehran University of Engineering and Technology, Jamshoro
 📧 Email: 23cs028@student.muet.edu.pk
+
 📅 Batch: 23  🎓 Roll No: 23CS028
