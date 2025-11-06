@@ -57,7 +57,7 @@ cd Skills_Exchange
 ### **2️⃣ Create and Activate Virtual Environment**
 python -m venv venv
 venv\Scripts\activate     # On Windows
-source venv/bin/activate  # On Linux/Mac
+# source venv/bin/activate  # On Linux/Mac
 
 
 ### **3️⃣ Install Dependencies**
