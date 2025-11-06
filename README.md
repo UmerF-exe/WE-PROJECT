@@ -90,6 +90,3 @@ Umer Farooque
 Department of Computer Systems Engineering
 
 Mehran University of Engineering and Technology, Jamshoro
-📧 Email: 23cs028@student.muet.edu.pk
-
-📅 Batch: 23  🎓 Roll No: 23CS028
